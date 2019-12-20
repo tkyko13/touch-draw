@@ -1,0 +1,79 @@
+<!-- HTML Example -->
+<html>
+  <head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyD5H--oEJ2bC12KGQx0dFlHHVcyJATsJO8",
+        authDomain: "mytest-fffd1.firebaseapp.com",
+        databaseURL: "https://mytest-fffd1.firebaseio.com",
+        projectId: "mytest-fffd1",
+        storageBucket: "mytest-fffd1.appspot.com",
+        messagingSenderId: "539585594918",
+        appId: "1:539585594918:web:947b17626650f269"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
+
+      div {
+        position: absolute;
+      }
+    </style>
+  </head>
+
+  <body ontouchmove="event.preventDefault()">
+    <script>
+      let lineP5;
+      let paintP5;
+      let lineDraw = false;
+      let imgDraw = 1;
+
+      let col;
+      let img = [];
+      function preload() {
+        img[0] = loadImage("img/apple.png");
+        img[1] = loadImage("img/banana.jpg");
+        img[2] = loadImage("img/bird.png");
+      }
+
+      function setup() {
+        createCanvas(windowWidth, windowHeight);
+
+        col = color(255, 0, 0);
+        let db = firebase.database();
+        let ref = db.ref("MyPaintApp/");
+        ref.on("value", d => {
+          let data = d.val();
+          col = color(data.r, data.g, data.b);
+        });
+
+        imageMode(CENTER);
+        image(img[int(random(3))], width / 2, height / 2);
+      }
+
+      function draw() {
+        if (mouseIsPressed) {
+          noFill();
+          stroke(col);
+          strokeWeight(15);
+          strokeCap(ROUND);
+          line(mouseX, mouseY, pmouseX, pmouseY);
+        }
+      }
+
+      function windowResized() {
+        resizeCanvas(windowWidth, windowHeight);
+      }
+    </script>
+  </body>
+</html>
