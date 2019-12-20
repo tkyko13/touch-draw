@@ -1,2 +1,2 @@
 # touch-draw
-touch-draw.ink
+https://touch-draw.ink
