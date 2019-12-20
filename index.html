@@ -5,20 +5,6 @@
     <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/6.2.0/firebase-database.js"></script>
 
-    <script>
-      // Your web app's Firebase configuration
-      var firebaseConfig = {
-        apiKey: "AIzaSyD5H--oEJ2bC12KGQx0dFlHHVcyJATsJO8",
-        authDomain: "mytest-fffd1.firebaseapp.com",
-        databaseURL: "https://mytest-fffd1.firebaseio.com",
-        projectId: "mytest-fffd1",
-        storageBucket: "mytest-fffd1.appspot.com",
-        messagingSenderId: "539585594918",
-        appId: "1:539585594918:web:947b17626650f269"
-      };
-      // Initialize Firebase
-      firebase.initializeApp(firebaseConfig);
-    </script>
     <style>
       body {
         padding: 0;
@@ -33,13 +19,22 @@
 
   <body ontouchmove="event.preventDefault()">
     <script>
-      let lineP5;
-      let paintP5;
-      let lineDraw = false;
-      let imgDraw = 1;
+      // firebaseのAPIキー
+      var firebaseConfig = {
+        apiKey: "AIzaSyD5H--oEJ2bC12KGQx0dFlHHVcyJATsJO8",
+        authDomain: "mytest-fffd1.firebaseapp.com",
+        databaseURL: "https://mytest-fffd1.firebaseio.com",
+        projectId: "mytest-fffd1",
+        storageBucket: "mytest-fffd1.appspot.com",
+        messagingSenderId: "539585594918",
+        appId: "1:539585594918:web:947b17626650f269"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
 
       let col;
       let img = [];
+      //起動時画像読み込み
       function preload() {
         img[0] = loadImage("img/apple.png");
         img[1] = loadImage("img/banana.jpg");
@@ -49,20 +44,27 @@
       function setup() {
         createCanvas(windowWidth, windowHeight);
 
+        //線の色　初期値は赤
         col = color(255, 0, 0);
+
+        //firebaseの設定
         let db = firebase.database();
         let ref = db.ref("MyPaintApp/");
         ref.on("value", d => {
+          //firebase内の値が変わったら実行される
           let data = d.val();
           col = color(data.r, data.g, data.b);
         });
 
+        //最初だけ画像描画
         imageMode(CENTER);
         image(img[int(random(3))], width / 2, height / 2);
       }
 
       function draw() {
+        //マウスが押されたら
         if (mouseIsPressed) {
+          //firebaseから受け取った色で線を描く
           noFill();
           stroke(col);
           strokeWeight(15);
